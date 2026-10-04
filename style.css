@@ -1,0 +1,369 @@
+/* style.css */
+:root {
+  --wine: #8e2b43;      
+  --rose: #e3a8b4;      
+  --text-dark: #6e5c5c; 
+  --bg-color: #fdeef1;
+  --gold-gradient: linear-gradient(135deg, #cba863 0%, #e6c27a 50%, #b8860b 100%);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.fixed-background {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 48%, #fffafa 40%, rgba(255, 250, 250, 0) 100%),
+    radial-gradient(ellipse at 0% 0%, #f4bcc8 0%, rgba(244, 188, 200, 0) 45%),
+    radial-gradient(ellipse at 100% 100%, #f4bcc8 0%, rgba(244, 188, 200, 0) 45%),
+    radial-gradient(ellipse at 100% 0%, #fbe3e8 0%, rgba(251, 227, 232, 0) 40%),
+    radial-gradient(ellipse at 0% 100%, #fbe3e8 0%, rgba(251, 227, 232, 0) 40%),
+    #fdeef1;
+}
+
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  font-family: 'Cormorant Garamond', serif;
+  overflow: hidden; /* Evita el scroll global, lo maneja el contenedor */
+}
+
+/* Tipografías */
+.script-font, .script-text, .script-highlight, .main-name, .modal-title { 
+  font-family: 'Great Vibes', cursive; 
+}
+.sans-font, .date-label, .month-label, .field, .submit-button, .pill-button span, .modal-subtitle { 
+  font-family: 'Montserrat', sans-serif; 
+}
+
+/* Efecto de texto dorado con gradiente */
+.gold-gradient {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* =========================================
+   CAPA FIJA (Background, Marco y Mariposas)
+   ========================================= */
+.svg-defs { display: none; }
+
+.fixed-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+}
+
+.fixed-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+}
+
+.gold-frame {
+  position: absolute;
+  inset: 1rem;
+  width: calc(100% - 2rem);
+  height: calc(100% - 2rem);
+}
+.frame-outer { fill: none; stroke: #cba863; stroke-width: 0.3; opacity: 0.8; }
+.frame-inner { fill: none; stroke: #cba863; stroke-width: 0.1; opacity: 0.6; }
+
+.floral-decoration {
+  position: absolute;
+  opacity: 0.9;
+  filter: hue-rotate(320deg) brightness(0.9) saturate(1.5);
+}
+.top-right-rose { top: -3rem; right: -4rem; width: 18rem; transform: rotate(130deg); }
+.bottom-left-rose { bottom: -4rem; left: -4rem; width: 20rem; transform: rotate(-45deg); }
+
+/* Animación de aleteo de mariposas */
+@keyframes flutter {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+.butterfly-icon {
+  position: absolute;
+  opacity: 0.8;
+  animation: flutter 5s ease-in-out infinite;
+}
+.pos-1 { top: 20%; left: 1.5rem; width: 2.5rem; }
+.pos-2 { top: 50%; right: 1.5rem; width: 2rem; transform: scaleX(-1) rotate(12deg); animation-delay: 2.5s; animation-duration: 6s; }
+.pos-3 { bottom: 20%; right: 2rem; width: 3rem; transform: rotate(-12deg); animation-delay: 1s; }
+
+
+/* =========================================
+   CONTENEDOR SCROLL SNAP (Navegación suave)
+   ========================================= */
+.scroll-container {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  scrollbar-width: none; 
+}
+.scroll-container::-webkit-scrollbar { display: none; }
+
+.section-snap {
+  scroll-snap-align: start;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.content-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+
+/* =========================================
+   ANIMACIONES DE ENTRADA (IntersectionObserver)
+   ========================================= */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+
+
+/* =========================================
+   ESTILOS DE SECCIONES INTERNAS
+   ========================================= */
+.tiara-icon { width: 8rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); }
+.tiara-icon.small { width: 6rem; }
+.tiara-icon-modal { width: 4rem; height: 2.5rem; margin: 0 auto 0.5rem auto; }
+
+.fifteen-title-group, .fifteen-subtitle-group {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 8rem;
+  width: 100%;
+  margin: 1rem 0;
+}
+.script-text { font-size: 3rem; color: #cba863; position: absolute; z-index: 2; }
+.script-text:not(.right) { left: 15%; top: 0.5rem; }
+.script-text.right { right: 10%; bottom: 0; font-size: 3.5rem; }
+
+.number-text { font-size: 8.5rem; font-weight: 700; line-height: 1; letter-spacing: -0.05em; z-index: 1; }
+
+.intro-text, .body-text { font-size: 1.25rem; font-style: italic; line-height: 1.6; margin-top: 2rem; max-width: 280px; }
+.body-text.narrow { max-width: 320px; font-size: 1.05rem; margin-top: 0; }
+@keyframes shimmer {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.script-highlight {
+  font-size: 2.2rem;
+  background: linear-gradient(100deg, #b98d2e, #f6e3a1, #c9a24a, #f6e3a1, #b98d2e);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25%); } }
+.scroll-indicator { position: absolute; bottom: 2rem; opacity: 0.6; animation: bounce 2s infinite; width: 1.5rem; color: #cba863; }
+
+/* Juliana Tomassi */
+.main-name { font-size: 4.5rem; color: #cba863; line-height: 0.8; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.05); padding-top: 1rem; }
+.last-name { font-size: 3.5rem; padding-left: 2.5rem; display: block; }
+
+/* Galería Polaroid */
+.photo-gallery { position: relative; width: 100%; height: 16rem; margin: 1rem 0; display: flex; justify-content: center; align-items: center; }
+.polaroid { position: absolute; width: 11rem; background: #fff; padding: 0.5rem 0.5rem 1.5rem 0.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #f0e4e6; transition: transform 0.4s ease, z-index 0s; }
+.polaroid img { width: 100%; height: 11rem; object-fit: cover; }
+.photo-left { left: 1rem; transform: rotate(-8deg); z-index: 1; }
+.photo-right { right: 1rem; transform: rotate(6deg); z-index: 2; }
+.polaroid:hover { transform: scale(1.05) translateY(-10px) rotate(0deg); z-index: 10; }
+
+/* Itinerario */
+.fifteen-subtitle-group .script-text { position: static; font-size: 2.5rem; margin: 0 0.5rem; }
+.fifteen-subtitle-group .number-text { font-size: 4rem; position: static; }
+
+.date-container { width: 90%; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(203,168,99,0.4); border-bottom: 1px solid rgba(203,168,99,0.4); padding: 0.5rem 0; margin-top: 1.5rem; }
+.date-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+.date-number { font-size: 3rem; font-weight: 700; margin: 0 1rem; }
+.month-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.35em; font-weight: 600; margin: 0.5rem 0 1.5rem 0; display: block; }
+.location-text { font-size: 1.1rem; font-weight: 600; color: #5c4747; margin-bottom: 2rem; }
+
+/* Botones */
+.action-buttons { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.pill-button { display: flex; align-items: center; gap: 0.75rem; width: 100%; max-width: 320px; border: 2px solid #cba863; border-radius: 9999px; padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(203,168,99,0.1); text-decoration: none; outline: none; }
+.pill-button:hover:not(.static) { background: #fff; transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 20px rgba(203,168,99,0.25); }
+.pill-button.static { cursor: default; }
+.icon-circle { width: 2.2rem; height: 2.2rem; flex-shrink: 0; }
+.pill-button span { font-size: 0.60rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: #6e5c5c; text-align: left; line-height: 1.2; }
+
+.closing-text { font-size: 3.5rem; color: #cba863; margin-top: 0.5rem; font-family: 'Great Vibes', cursive; }
+
+/* =========================================
+   MODAL DE CONFIRMACIÓN
+   ========================================= */
+.modal-backdrop { position: fixed; inset: 0; z-index: 100; background: rgba(40,20,25,0.75); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 1; transition: opacity 0.3s ease; }
+.modal-backdrop[hidden] { opacity: 0; pointer-events: none; display: flex !important; }
+.modal-content { background: #fff; border: 2px solid #cba863; border-radius: 2rem; padding: 2rem; width: 100%; max-width: 360px; position: relative; text-align: center; transform: scale(1); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+.modal-backdrop[hidden] .modal-content { transform: scale(0.95); }
+
+.close-button { position: absolute; top: 1rem; right: 1.25rem; background: none; border: none; font-size: 1.25rem; color: #8e2b43; font-weight: bold; cursor: pointer; transition: transform 0.2s; outline: none; }
+.close-button:hover { transform: scale(1.2); }
+
+.modal-title { font-size: 2.5rem; color: #cba863; line-height: 1; margin-bottom: 0.2rem;}
+.modal-subtitle { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 1.5rem; color: #6e5c5c; }
+
+#rsvp-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+.field { width: 100%; border: 1px solid #dec6c9; border-radius: 0.5rem; padding: 0.75rem 1rem; background: #fffaf6; font-size: 0.9rem; color: #5c4747; outline: none; transition: border-color 0.3s; }
+.field:focus { border-color: #cba863; }
+
+.submit-button { width: 100%; background: #cba863; color: #fff; border: none; padding: 0.85rem; border-radius: 9999px; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em; cursor: pointer; transition: background 0.3s, transform 0.2s; margin-top: 0.5rem; box-shadow: 0 4px 10px rgba(203,168,99,0.3); }
+.submit-button:hover { background: #b8860b; transform: translateY(-1px); }
+
+.status-message { font-size: 0.75rem; text-align: center; padding: 0.5rem; border-radius: 0.25rem; font-weight: 600; }
+.status-message.error { color: #dc2626; background: #fef2f2; }
+.status-message.success { color: #15803d; background: #f0fdf4; }
+
+/* Mariposas: aleteo (las alas se cierran un poco) + flotación */
+@keyframes flutter {
+  0%, 100% { transform: translateY(0)     rotate(-6deg) scaleX(1); }
+  25%      { transform: translateY(-10px) rotate(2deg)  scaleX(.72); }
+  50%      { transform: translateY(-16px) rotate(6deg)  scaleX(1); }
+  75%      { transform: translateY(-6px)  rotate(-2deg) scaleX(.78); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: .15; transform: scale(.5) rotate(0deg); }
+  50%      { opacity: 1;   transform: scale(1.1) rotate(45deg); }
+}
+
+.butterfly-icon {
+  position: absolute;
+  opacity: 0.9;
+  transform-origin: 50% 50%;
+  animation: flutter 6s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(201, 162, 74, 0.25));
+}
+
+.pos-1 { top: 38%;    left: 1.5rem;  width: 3.4rem; }
+.pos-2 { top: 28%;    right: 1.5rem; width: 2.6rem; scale: -1 1; animation-delay: 2s; animation-duration: 7s; }
+.pos-3 { bottom: 22%; right: 1.8rem; width: 3.5rem; animation-delay: 3s; }
+
+.sparkle { position: absolute; width: 1rem; animation: twinkle 3.2s ease-in-out infinite; }
+.sp-1 { top: 18%;    left: 30%;  }
+.sp-2 { top: 45%;    right: 12%; animation-delay: 1.2s; }
+.sp-3 { bottom: 14%; left: 22%;  animation-delay: 2.1s; }
+
+/* =========================================
+   ESTILOS DE SECCIÓN FECHAS (Rosa Cursiva)
+   ========================================= */
+.pink-script {
+  font-family: 'Great Vibes', cursive;
+  color: #e26a8d;
+  text-shadow: 0 1px 2px rgba(226, 106, 141, 0.1);
+}
+
+.date-row-pink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
+.date-row-pink .pink-script {
+  font-size: 2.8rem;
+}
+
+.pink-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4.5rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #e26a8d;
+  line-height: 0.8;
+  border-left: 1px solid rgba(226, 106, 141, 0.4);
+  border-right: 1px solid rgba(226, 106, 141, 0.4);
+  padding: 0 1.2rem;
+}
+
+.church-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0.5rem 0 1rem 0;
+  opacity: 0.8;
+  filter: drop-shadow(0 2px 4px rgba(226, 106, 141, 0.15));
+}
+
+.event-block {
+  margin-bottom: 2.5rem;
+  line-height: 1.1;
+  width: 100%;
+}
+
+.reception-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+.reception-row {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* style.css - Reemplaza la clase existente */
+.shimmer-gold {
+  background: linear-gradient(100deg, #b98d2e, #f6e3a1, #c9a24a, #f6e3a1, #b98d2e);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+  
+  /* EL TRUCO PARA EVITAR EL CORTE: */
+  display: inline-block;
+  padding: 0.4em 0.5em;
+  margin: -0.4em -0.5em;
+  line-height: 1.2;
+}
+
+/* Agrega también esta clase para tu muñequita */
+.munequita-silueta {
+  width: 20rem; /* Tamaño pequeñito y elegante */
+  height: auto;
+  margin-bottom: 0.01rem; /* Separación con "mis 15 años" */
+  opacity: 1;
+  filter: drop-shadow(0 2px 4px rgba(226, 106, 141, 0.2));
+}
