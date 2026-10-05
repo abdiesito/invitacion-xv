@@ -88,6 +88,63 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error('Error:', error);
     });
   });
+
+// 4. Lógica del Reproductor de Música (Fade-in y Autoplay)
+  const bgMusic = document.getElementById('bg-music');
+  const musicBtn = document.getElementById('music-btn');
+  let isPlaying = false;
+  let hasInteracted = false;
+
+  // Función para subir el volumen suavemente (Transición)
+  function playWithFade() {
+    bgMusic.volume = 0;
+    bgMusic.play().then(() => {
+      let vol = 0;
+      const fadeInterval = setInterval(() => {
+        if (vol < 0.4) { // Volumen máximo al 40% para que no sature
+          vol += 0.05;
+          bgMusic.volume = vol;
+        } else {
+          clearInterval(fadeInterval);
+        }
+      }, 200);
+      musicBtn.classList.add('playing');
+      isPlaying = true;
+    }).catch(err => console.log("El navegador bloqueó el autoplay", err));
+  }
+
+  function toggleMusic() {
+    if (isPlaying) {
+      bgMusic.pause();
+      musicBtn.classList.remove('playing');
+    } else {
+      playWithFade();
+    }
+    isPlaying = !isPlaying;
+  }
+
+  // Activar o pausar al hacer clic en el botón
+  musicBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Evita que dispare otros eventos
+    hasInteracted = true;
+    toggleMusic();
+  });
+
+  // Intentar iniciar la música automáticamente al primer toque o scroll
+  const autoPlayMusic = () => {
+    if (!hasInteracted && !isPlaying) {
+      playWithFade();
+      hasInteracted = true;
+    }
+    // Removemos los escuchadores una vez que ya interactuó
+    document.removeEventListener('click', autoPlayMusic);
+    document.removeEventListener('scroll', autoPlayMusic);
+    document.removeEventListener('touchstart', autoPlayMusic);
+  };
+  
+  document.addEventListener('click', autoPlayMusic);
+  document.addEventListener('scroll', autoPlayMusic, { once: true });
+  document.addEventListener('touchstart', autoPlayMusic, { once: true });
+  
 });
 
-//
