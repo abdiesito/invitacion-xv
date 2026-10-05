@@ -367,3 +367,42 @@ body {
   opacity: 1;
   filter: drop-shadow(0 2px 4px rgba(226, 106, 141, 0.2));
 }
+
+/* =========================================
+   BOTÓN DE MÚSICA FLOTANTE
+   ========================================= */
+.music-float-btn {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem; /* Cámbialo a right: 2rem; si prefieres que esté a la derecha */
+  z-index: 50;
+  background: rgba(253, 238, 241, 0.9);
+  border: 2px solid #cba863;
+  border-radius: 50%;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #8e2b43;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(203, 168, 99, 0.2);
+  transition: transform 0.3s;
+}
+
+.music-float-btn svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Animación de latido cuando está reproduciendo */
+@keyframes pulse-music {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(203, 168, 99, 0.6); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(203, 168, 99, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(203, 168, 99, 0); }
+}
+
+.music-float-btn.playing {
+  animation: pulse-music 2s infinite;
+  background: #fff;
+}
