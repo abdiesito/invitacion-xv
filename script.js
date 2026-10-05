@@ -89,9 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-// 4. Lógica del Reproductor de Música (Fade-in y Autoplay)
+// 4. Lógica del Reproductor de Música (Fade-in y Autoplay al primer toque o scroll)
   const bgMusic = document.getElementById('bg-music');
   const musicBtn = document.getElementById('music-btn');
+  const scrollContainer = document.querySelector('.scroll-container');
   let isPlaying = false;
   let hasInteracted = false;
 
@@ -101,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bgMusic.play().then(() => {
       let vol = 0;
       const fadeInterval = setInterval(() => {
-        if (vol < 0.4) { // Volumen máximo al 40% para que no sature
+        if (vol < 0.4) { // Volumen al 40% para que sea ambiental y agradable
           vol += 0.05;
           bgMusic.volume = vol;
         } else {
@@ -110,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 200);
       musicBtn.classList.add('playing');
       isPlaying = true;
-    }).catch(err => console.log("El navegador bloqueó el autoplay", err));
+    }).catch(err => console.log("El navegador requiere interacción previa", err));
   }
 
   function toggleMusic() {
@@ -123,14 +124,14 @@ document.addEventListener("DOMContentLoaded", () => {
     isPlaying = !isPlaying;
   }
 
-  // Activar o pausar al hacer clic en el botón
+  // Control manual mediante el botón flotante
   musicBtn.addEventListener('click', (e) => {
-    e.stopPropagation(); // Evita que dispare otros eventos
+    e.stopPropagation(); 
     hasInteracted = true;
     toggleMusic();
   });
 
-  // Intentar iniciar la música automáticamente al primer toque o scroll
+  // Función que dispara el autoplay y se autodesactiva para no repetirse
   const autoPlayMusic = () => {
     if (!hasInteracted && !isPlaying) {
       playWithFade();
@@ -138,13 +139,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // Removemos los escuchadores una vez que ya interactuó
     document.removeEventListener('click', autoPlayMusic);
-    document.removeEventListener('scroll', autoPlayMusic);
     document.removeEventListener('touchstart', autoPlayMusic);
+    if (scrollContainer) {
+      scrollContainer.removeEventListener('scroll', autoPlayMusic);
+    }
   };
   
+  // Escuchamos el primer toque, clic o scroll en el contenedor principal
   document.addEventListener('click', autoPlayMusic);
-  document.addEventListener('scroll', autoPlayMusic, { once: true });
-  document.addEventListener('touchstart', autoPlayMusic, { once: true });
+  document.addEventListener('touchstart', autoPlayMusic);
+  if (scrollContainer) {
+    scrollContainer.addEventListener('scroll', autoPlayMusic, { once: true });
+  }
   
 });
 
